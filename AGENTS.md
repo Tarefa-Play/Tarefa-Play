@@ -28,3 +28,8 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Roles live only in `public.user_roles` and are checked via `has_role()` in RLS; signup trigger assigns validador/anunciante from signup metadata, never admin (admin is granted manually).
+- Each role has its own route area (`/validador`, `/anunciante`, `/admin`) guarded client-side by `src/components/role-area.tsx`; data protection relies on RLS.
+- Business values/limits are read from `public.configuracoes`, never hardcoded.

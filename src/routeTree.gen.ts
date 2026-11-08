@@ -12,6 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AnuncianteRouteImport } from './routes/anunciante'
+import { Route as CadastroRouteImport } from './routes/cadastro'
+import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as EntrarRouteImport } from './routes/entrar'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as TermosRouteImport } from './routes/termos'
 import { Route as ValidadorRouteImport } from './routes/validador'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AnuncianteIndexRouteImport } from './routes/anunciante.index'
@@ -30,6 +35,31 @@ const AdminRoute = AdminRouteImport.update({
 const AnuncianteRoute = AnuncianteRouteImport.update({
   id: '/anunciante',
   path: '/anunciante',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastroRoute = CadastroRouteImport.update({
+  id: '/cadastro',
+  path: '/cadastro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntrarRoute = EntrarRouteImport.update({
+  id: '/entrar',
+  path: '/entrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ValidadorRoute = ValidadorRouteImport.update({
@@ -57,6 +87,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/anunciante': typeof AnuncianteRouteWithChildren
+  '/cadastro': typeof CadastroRoute
+  '/contato': typeof ContatoRoute
+  '/entrar': typeof EntrarRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/termos': typeof TermosRoute
   '/validador': typeof ValidadorRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/anunciante/': typeof AnuncianteIndexRoute
@@ -64,6 +99,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cadastro': typeof CadastroRoute
+  '/contato': typeof ContatoRoute
+  '/entrar': typeof EntrarRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/termos': typeof TermosRoute
   '/admin': typeof AdminIndexRoute
   '/anunciante': typeof AnuncianteIndexRoute
   '/validador': typeof ValidadorIndexRoute
@@ -73,6 +113,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/anunciante': typeof AnuncianteRouteWithChildren
+  '/cadastro': typeof CadastroRoute
+  '/contato': typeof ContatoRoute
+  '/entrar': typeof EntrarRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/termos': typeof TermosRoute
   '/validador': typeof ValidadorRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/anunciante/': typeof AnuncianteIndexRoute
@@ -84,17 +129,36 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/anunciante'
+    | '/cadastro'
+    | '/contato'
+    | '/entrar'
+    | '/privacidade'
+    | '/termos'
     | '/validador'
     | '/admin/'
     | '/anunciante/'
     | '/validador/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/anunciante' | '/validador'
+  to:
+    | '/'
+    | '/cadastro'
+    | '/contato'
+    | '/entrar'
+    | '/privacidade'
+    | '/termos'
+    | '/admin'
+    | '/anunciante'
+    | '/validador'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/anunciante'
+    | '/cadastro'
+    | '/contato'
+    | '/entrar'
+    | '/privacidade'
+    | '/termos'
     | '/validador'
     | '/admin/'
     | '/anunciante/'
@@ -105,6 +169,11 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   AnuncianteRoute: typeof AnuncianteRouteWithChildren
+  CadastroRoute: typeof CadastroRoute
+  ContatoRoute: typeof ContatoRoute
+  EntrarRoute: typeof EntrarRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
+  TermosRoute: typeof TermosRoute
   ValidadorRoute: typeof ValidadorRouteWithChildren
 }
 
@@ -129,6 +198,41 @@ declare module '@tanstack/react-router' {
       path: '/anunciante'
       fullPath: '/anunciante'
       preLoaderRoute: typeof AnuncianteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastro': {
+      id: '/cadastro'
+      path: '/cadastro'
+      fullPath: '/cadastro'
+      preLoaderRoute: typeof CadastroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/entrar': {
+      id: '/entrar'
+      path: '/entrar'
+      fullPath: '/entrar'
+      preLoaderRoute: typeof EntrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/validador': {
@@ -200,6 +304,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AnuncianteRoute: AnuncianteRouteWithChildren,
+  CadastroRoute: CadastroRoute,
+  ContatoRoute: ContatoRoute,
+  EntrarRoute: EntrarRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
+  TermosRoute: TermosRoute,
   ValidadorRoute: ValidadorRouteWithChildren,
 }
 export const routeTree = rootRouteImport
