@@ -29,14 +29,21 @@ function Entrar() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha });
-    setBusy(false);
-    if (error) {
-      toast.error(error.message.includes("confirmed") ? "Confirme seu e-mail antes de entrar." : "E-mail ou senha incorretos.");
-      return;
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha });
+      if (error) {
+        toast.error(error.message.includes("confirmed") ? "Confirme seu e-mail antes de entrar." : "E-mail ou senha incorretos.");
+        return;
+      }
+
+      const roles = await fetchRoles(data.user.id);
+      navigate({ to: rolePath(primaryRole(roles)) });
+    } catch (error) {
+      console.error("[Auth] Falha ao concluir o login.", error);
+      toast.error("Não foi possível verificar seu perfil. Tente novamente.");
+    } finally {
+      setBusy(false);
     }
-    const roles = await fetchRoles(data.user.id);
-    navigate({ to: rolePath(primaryRole(roles)) });
   };
 
   return (

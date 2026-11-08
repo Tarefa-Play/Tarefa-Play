@@ -4,8 +4,16 @@ import { supabase } from "@/integrations/supabase/client";
 
 export type AppRole = "validador" | "anunciante" | "admin";
 
+export function isAppRole(value: unknown): value is AppRole {
+  return value === "validador" || value === "anunciante" || value === "admin";
+}
+
+export function parseAppRoles(values: readonly unknown[]): AppRole[] {
+  return values.filter(isAppRole);
+}
+
 // Admin wins over the others; each user has one primary area.
-export function primaryRole(roles: AppRole[]): AppRole | null {
+export function primaryRole(roles: readonly AppRole[]): AppRole | null {
   if (roles.includes("admin")) return "admin";
   if (roles.includes("anunciante")) return "anunciante";
   if (roles.includes("validador")) return "validador";
@@ -18,8 +26,9 @@ export function rolePath(role: AppRole | null): "/validador" | "/anunciante" | "
 }
 
 export async function fetchRoles(userId: string): Promise<AppRole[]> {
-  const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId);
-  return (data ?? []).map((r) => r.role as AppRole);
+  const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", userId);
+  if (error) throw error;
+  return parseAppRoles((data ?? []).map((row) => row.role));
 }
 
 export function useAuth() {
@@ -29,18 +38,41 @@ export function useAuth() {
 
   useEffect(() => {
     let active = true;
-    const load = async (s: Session | null) => {
-      setSession(s);
-      if (s) {
-        const roles = await fetchRoles(s.user.id);
-        if (active) setRole(primaryRole(roles));
-      } else setRole(null);
-      if (active) setLoading(false);
+    let latestRequest = 0;
+
+    const load = async (nextSession: Session | null) => {
+      const requestId = ++latestRequest;
+      if (!active) return;
+
+      setSession(nextSession);
+      if (!nextSession) {
+        setRole(null);
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const roles = await fetchRoles(nextSession.user.id);
+        if (active && requestId === latestRequest) setRole(primaryRole(roles));
+      } catch (error) {
+        console.error("[Auth] Não foi possível carregar os papéis do usuário.", error);
+        if (active && requestId === latestRequest) setRole(null);
+      } finally {
+        if (active && requestId === latestRequest) setLoading(false);
+      }
     };
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
-      setTimeout(() => load(s), 0);
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      // Defer Supabase queries until after the auth callback has completed.
+      setTimeout(() => void load(nextSession), 0);
     });
-    supabase.auth.getSession().then(({ data }) => load(data.session));
+
+    supabase.auth.getSession().then(({ data }) => void load(data.session)).catch((error) => {
+      console.error("[Auth] Não foi possível recuperar a sessão.", error);
+      if (active) setLoading(false);
+    });
+
     return () => {
       active = false;
       sub.subscription.unsubscribe();
