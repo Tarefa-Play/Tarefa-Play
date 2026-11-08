@@ -12,7 +12,7 @@ type Perfil = "validador" | "anunciante";
 
 export const Route = createFileRoute("/cadastro")({
   validateSearch: (s: Record<string, unknown>): { perfil: Perfil } => ({
-    perfil: s.perfil === "anunciante" ? "anunciante" : "validador",
+    perfil: s["perfil"] === "anunciante" ? "anunciante" : "validador",
   }),
   head: () => ({
     meta: [
@@ -37,14 +37,14 @@ function Cadastro() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!maior) return toast.error("É preciso ter 18 anos ou mais.");
+    if (!maior) { toast.error("É preciso ter 18 anos ou mais."); return; }
     setBusy(true);
     const { error } = await supabase.auth.signUp({
       email, password: senha,
       options: { emailRedirectTo: `${window.location.origin}/entrar`, data: { nome, perfil } },
     });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setEnviado(true);
   };
 

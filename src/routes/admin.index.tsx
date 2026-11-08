@@ -20,8 +20,10 @@ function AdminConfig() {
   useEffect(() => { load(); }, []);
 
   const salvar = async (chave: string) => {
-    const { error } = await supabase.from("configuracoes").update({ valor: edits[chave] }).eq("chave", chave);
-    if (error) return toast.error("Não foi possível salvar");
+    const valor = edits[chave];
+    if (valor === undefined) return;
+    const { error } = await supabase.from("configuracoes").update({ valor }).eq("chave", chave);
+    if (error) { toast.error("Não foi possível salvar"); return; }
     toast.success("Configuração salva");
     setEdits((e) => { const n = { ...e }; delete n[chave]; return n; });
     load();
