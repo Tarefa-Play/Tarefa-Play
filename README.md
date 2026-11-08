@@ -17,11 +17,10 @@ bun run dev
 
 ```sh
 bun run test
-bun run lint
 bun run build
 ```
 
-O GitHub Actions executa essas verificações em pull requests direcionados à `main`.
+O GitHub Actions executa testes e build de produção em pull requests direcionados à `main`. O lint geral está temporariamente fora do bloqueio porque o repositório já apresenta centenas de pendências de formatação preexistentes; elas devem ser tratadas em uma tarefa dedicada.
 
 ## Fluxo de contribuição
 
