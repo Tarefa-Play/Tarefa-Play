@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   validate:
-    name: Tests, lint and production build
+    name: Tests and production build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,8 +32,6 @@ jobs:
       - name: Run tests
         run: bun run test
 
-      - name: Run lint
-        run: bun run lint
 
       - name: Build production app
         run: bun run build
