@@ -39,6 +39,11 @@ function Header() {
           )}
         </div>
       </div>
+      <nav aria-label="Navegação principal" className="mx-auto flex max-w-6xl gap-5 overflow-x-auto px-5 pb-3 text-xs font-medium text-muted-foreground md:hidden">
+        <a href="#como-funciona" className="shrink-0 hover:text-foreground">Como funciona</a>
+        <a href="#validadores" className="shrink-0 hover:text-foreground">Para Validadores</a>
+        <a href="#anunciantes" className="shrink-0 hover:text-foreground">Para Anunciantes</a>
+      </nav>
     </header>
   );
 }
@@ -74,7 +79,7 @@ function ScoreCard() {
   );
 }
 
-const faq = [
+const faq: [string, string][] = [
   ["O que é o Tarefa-Play?", "Uma plataforma que conecta Anunciantes, que querem saber o que o público acha dos seus produtos, a Validadores independentes, que avaliam com honestidade."],
   ["Como e quando o saque é feito?", "O saque é feito via Pix, para uma chave do próprio titular (mesmo nome e CPF do cadastro), quando o saldo acumulado chega a no mínimo R$ 100. Em contas novas, o saldo fica pendente por 24h."],
   ["Quanto eu ganho como Validador?", "Cada tarefa tem um valor exibido antes de você aceitar. Os ganhos variam e não são garantidos."],
@@ -106,7 +111,6 @@ function Home() {
               <Button asChild variant="hero" size="xl"><Link to="/cadastro" search={{ perfil: "anunciante" }}>Quero validar meu produto</Link></Button>
             </div>
           </div>
-          <div className="flex justify-center md:justify-end"><ScoreCard /></div>
         </div>
       </section>
 
@@ -185,6 +189,11 @@ function Home() {
       </section>
       <p className="-mt-12 pb-16 text-center text-xs text-muted-foreground">Os ganhos variam e não são garantidos.</p>
 
+      {/* Exemplo de resultado */}
+      <section aria-label="Exemplo de resultado de validação" className="mx-auto flex max-w-6xl justify-center px-5 pb-20">
+        <ScoreCard />
+      </section>
+
       {/* Confiança */}
       <section className="border-y bg-primary-soft">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-5 py-10 md:grid-cols-4">
@@ -208,17 +217,6 @@ function Home() {
         </Accordion>
       </section>
 
-      {/* CTA final */}
-      <section className="px-5 pb-20">
-        <div className="mx-auto max-w-6xl rounded-[2rem] bg-gradient-primary px-6 py-14 text-center text-primary-foreground shadow-elegant">
-          <h2 className="text-3xl font-bold md:text-4xl">Pronto para ouvir a verdade sobre seu produto?</h2>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button asChild variant="success" size="xl"><Link to="/cadastro" search={{ perfil: "validador" }}>Quero validar e ganhar</Link></Button>
-            <Button asChild variant="secondary" size="xl" className="rounded-full font-semibold"><Link to="/cadastro" search={{ perfil: "anunciante" }}>Quero validar meu produto</Link></Button>
-          </div>
-        </div>
-      </section>
-
       <footer className="border-t">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 py-8 text-sm text-muted-foreground md:flex-row">
           <Logo />
@@ -230,6 +228,18 @@ function Home() {
           <p>© 2026 Tarefa-Play</p>
         </div>
       </footer>
+
+      {/* CTA final */}
+      <section className="px-5 pb-20">
+        <div className="mx-auto max-w-6xl rounded-[2rem] bg-gradient-primary px-6 py-14 text-center text-primary-foreground shadow-elegant">
+          <h2 className="text-3xl font-bold md:text-4xl">Pronto para ouvir a verdade sobre seu produto?</h2>
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <Button asChild variant="success" size="xl"><Link to="/cadastro" search={{ perfil: "validador" }}>Quero validar e ganhar</Link></Button>
+            <Button asChild variant="secondary" size="xl" className="rounded-full font-semibold"><Link to="/cadastro" search={{ perfil: "anunciante" }}>Quero validar meu produto</Link></Button>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }
