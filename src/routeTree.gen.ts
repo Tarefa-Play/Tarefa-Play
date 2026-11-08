@@ -10,33 +10,102 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AnuncianteRouteImport } from './routes/anunciante'
+import { Route as ValidadorRouteImport } from './routes/validador'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AnuncianteIndexRouteImport } from './routes/anunciante.index'
+import { Route as ValidadorIndexRouteImport } from './routes/validador.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnuncianteRoute = AnuncianteRouteImport.update({
+  id: '/anunciante',
+  path: '/anunciante',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ValidadorRoute = ValidadorRouteImport.update({
+  id: '/validador',
+  path: '/validador',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AnuncianteIndexRoute = AnuncianteIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AnuncianteRoute,
+} as any)
+const ValidadorIndexRoute = ValidadorIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ValidadorRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/anunciante': typeof AnuncianteRouteWithChildren
+  '/validador': typeof ValidadorRouteWithChildren
+  '/admin/': typeof AdminIndexRoute
+  '/anunciante/': typeof AnuncianteIndexRoute
+  '/validador/': typeof ValidadorIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminIndexRoute
+  '/anunciante': typeof AnuncianteIndexRoute
+  '/validador': typeof ValidadorIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/anunciante': typeof AnuncianteRouteWithChildren
+  '/validador': typeof ValidadorRouteWithChildren
+  '/admin/': typeof AdminIndexRoute
+  '/anunciante/': typeof AnuncianteIndexRoute
+  '/validador/': typeof ValidadorIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/anunciante'
+    | '/validador'
+    | '/admin/'
+    | '/anunciante/'
+    | '/validador/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/admin' | '/anunciante' | '/validador'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/anunciante'
+    | '/validador'
+    | '/admin/'
+    | '/anunciante/'
+    | '/validador/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  AnuncianteRoute: typeof AnuncianteRouteWithChildren
+  ValidadorRoute: typeof ValidadorRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +117,90 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/anunciante': {
+      id: '/anunciante'
+      path: '/anunciante'
+      fullPath: '/anunciante'
+      preLoaderRoute: typeof AnuncianteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/validador': {
+      id: '/validador'
+      path: '/validador'
+      fullPath: '/validador'
+      preLoaderRoute: typeof ValidadorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/anunciante/': {
+      id: '/anunciante/'
+      path: '/'
+      fullPath: '/anunciante/'
+      preLoaderRoute: typeof AnuncianteIndexRouteImport
+      parentRoute: typeof AnuncianteRoute
+    }
+    '/validador/': {
+      id: '/validador/'
+      path: '/'
+      fullPath: '/validador/'
+      preLoaderRoute: typeof ValidadorIndexRouteImport
+      parentRoute: typeof ValidadorRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface AnuncianteRouteChildren {
+  AnuncianteIndexRoute: typeof AnuncianteIndexRoute
+}
+
+const AnuncianteRouteChildren: AnuncianteRouteChildren = {
+  AnuncianteIndexRoute: AnuncianteIndexRoute,
+}
+
+const AnuncianteRouteWithChildren = AnuncianteRoute._addFileChildren(
+  AnuncianteRouteChildren,
+)
+
+interface ValidadorRouteChildren {
+  ValidadorIndexRoute: typeof ValidadorIndexRoute
+}
+
+const ValidadorRouteChildren: ValidadorRouteChildren = {
+  ValidadorIndexRoute: ValidadorIndexRoute,
+}
+
+const ValidadorRouteWithChildren = ValidadorRoute._addFileChildren(
+  ValidadorRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  AnuncianteRoute: AnuncianteRouteWithChildren,
+  ValidadorRoute: ValidadorRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
