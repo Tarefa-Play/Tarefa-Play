@@ -1,24 +1,30 @@
 # Tarefa-Play
 
-Implement exactly the screenshot and nothing else
+Plataforma de validação de produtos que conecta Anunciantes a Validadores independentes.
 
-This project was built with [Lovable](https://lovable.dev).
+Este projeto é desenvolvido com [Lovable](https://lovable.dev) e usa Lovable Cloud para a infraestrutura gerenciada. Alterações de schema e banco de dados devem ser feitas pelo fluxo do Lovable Cloud, conforme as regras em `AGENTS.md`.
 
-## Build with Lovable
+## Desenvolvimento
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/7d295e9e-6d13-44b4-a78d-c9ade9de0ef1).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Requisitos: Bun (versão atual) e Node.js 22 ou superior.
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+bun install --frozen-lockfile
+bun run dev
 ```
+
+## Verificações
+
+```sh
+bun run test
+bun run build
+```
+
+O GitHub Actions executa testes e build de produção em pull requests direcionados à `main`. O lint geral está temporariamente fora do bloqueio porque o repositório já apresenta centenas de pendências de formatação preexistentes; elas devem ser tratadas em uma tarefa dedicada.
+
+## Fluxo de contribuição
+
+- Desenvolva em uma branch de trabalho.
+- Abra um pull request para `main`.
+- Não faça merge sem revisão e validação do responsável pelo projeto.
+- Não edite migrations ou arquivos gerados manualmente; consulte `AGENTS.md`.
