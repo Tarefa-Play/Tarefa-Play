@@ -46,13 +46,25 @@ function AdminConfig() {
     }
 
     setSaving(chave);
-    const { error } = await supabase.from("configuracoes").update({ valor: valor.trim() }).eq("chave", chave);
-    if (error) {
-      console.error("[Admin] Falha ao salvar configuração.", { chave, error });
-      toast.error("Não foi possível salvar. Verifique sua permissão e tente novamente.");
+    const { data, error } = await supabase
+      .from("configuracoes")
+      .update({ valor: valor.trim() })
+      .eq("chave", chave)
+      .select("chave")
+      .single();
+
+    // PostgREST can return no error when RLS filters every updated row.
+    // Requiring the updated key prevents a false-positive success message.
+    if (error || !data) {
+      console.error("[Admin] Falha ao confirmar persistência da configuração.", {
+        chave,
+        error: error ?? new Error("Nenhuma configuração foi atualizada."),
+      });
+      toast.error("Não foi possível confirmar a gravação. Verifique sua permissão e tente novamente.");
       setSaving(null);
       return;
     }
+
     toast.success("Configuração salva.");
     setEdits((current) => {
       const next = { ...current };
