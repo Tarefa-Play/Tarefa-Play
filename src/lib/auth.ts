@@ -39,6 +39,7 @@ export function useAuth() {
   useEffect(() => {
     let active = true;
     let latestRequest = 0;
+    let authEventReceived = false;
 
     const load = async (nextSession: Session | null) => {
       const requestId = ++latestRequest;
@@ -64,13 +65,18 @@ export function useAuth() {
     };
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      // An auth event is newer than the initial getSession() snapshot.
+      authEventReceived = true;
       // Defer Supabase queries until after the auth callback has completed.
       setTimeout(() => void load(nextSession), 0);
     });
 
-    supabase.auth.getSession().then(({ data }) => void load(data.session)).catch((error) => {
+    supabase.auth.getSession().then(({ data }) => {
+      // Avoid overwriting a newer sign-in/sign-out event with a stale snapshot.
+      if (active && !authEventReceived) void load(data.session);
+    }).catch((error) => {
       console.error("[Auth] Não foi possível recuperar a sessão.", error);
-      if (active) setLoading(false);
+      if (active && !authEventReceived) setLoading(false);
     });
 
     return () => {

@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchRoles, primaryRole, rolePath } from "@/lib/auth";
 import { AuthCard } from "@/components/auth-card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/cadastro")({
 
 function Cadastro() {
   const { perfil: inicial } = Route.useSearch();
+  const navigate = useNavigate();
   const [perfil, setPerfil] = useState<Perfil>(inicial);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -37,15 +39,54 @@ function Cadastro() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!maior) { toast.error("É preciso ter 18 anos ou mais."); return; }
+    if (!maior) {
+      toast.error("É preciso ter 18 anos ou mais.");
+      return;
+    }
+    if (senha.length < 8) {
+      toast.error("A senha deve ter pelo menos 8 caracteres.");
+      return;
+    }
+
     setBusy(true);
-    const { error } = await supabase.auth.signUp({
-      email, password: senha,
-      options: { emailRedirectTo: `${window.location.origin}/entrar`, data: { nome, perfil } },
-    });
-    setBusy(false);
-    if (error) { toast.error(error.message); return; }
-    setEnviado(true);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password: senha,
+        options: {
+          emailRedirectTo: `${window.location.origin}/entrar`,
+          data: { nome: nome.trim(), perfil },
+        },
+      });
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+
+      // Supabase returns no session when email confirmation is required.
+      // If confirmation is disabled, the user is already signed in: route
+      // according to the authoritative role row instead of showing a false
+      // "check your email" success state.
+      if (data.session) {
+        const roles = await fetchRoles(data.user.id);
+        const assignedRole = primaryRole(roles);
+        if (!assignedRole) {
+          await supabase.auth.signOut();
+          toast.error("Sua conta foi criada, mas o perfil ainda não foi liberado. Entre em contato com o suporte.");
+          return;
+        }
+        await navigate({ to: rolePath(assignedRole) });
+        return;
+      }
+
+      setEnviado(true);
+    } catch (error) {
+      console.error("[Auth] Falha inesperada ao criar conta.", error);
+      toast.error("Não foi possível concluir o cadastro. Verifique sua conexão e tente novamente.");
+    } finally {
+      setBusy(false);
+    }
   };
 
   if (enviado)
