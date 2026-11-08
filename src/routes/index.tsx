@@ -81,11 +81,11 @@ function ScoreCard() {
 
 const faq: [string, string][] = [
   ["O que é o Tarefa-Play?", "Uma plataforma que conecta Anunciantes, que querem saber o que o público acha dos seus produtos, a Validadores independentes, que avaliam com honestidade."],
-  ["Como e quando o saque é feito?", "O saque é feito via Pix, para uma chave do próprio titular (mesmo nome e CPF do cadastro), quando o saldo acumulado chega a no mínimo R$ 100. Em contas novas, o saldo fica pendente por 24h."],
+  ["Como e quando o saque será feito?", "A regra planejada prevê saque via Pix, para uma chave do próprio titular, a partir de R$ 100. O pagamento via Pix ainda não está disponível nesta etapa; prazos e condições serão confirmados quando a funcionalidade for ativada."],
   ["Quanto eu ganho como Validador?", "Cada tarefa tem um valor exibido antes de você aceitar. Os ganhos variam e não são garantidos."],
   ["Preciso cumprir horário?", "Não. O Validador é um usuário independente, com liberdade de horário e sem vínculo trabalhista."],
   ["O anunciante pode apagar uma nota ruim?", "Não. As avaliações são independentes e o anunciante não pode alterar nem apagar o resultado."],
-  ["Quem pode participar?", "Maiores de 18 anos, com conta verificada e um CPF por conta."],
+  ["Quem pode participar?", "A plataforma é destinada a maiores de 18 anos. Poderão ser solicitadas verificações adicionais quando esses recursos estiverem disponíveis."],
 ];
 
 function Home() {
@@ -173,7 +173,7 @@ function Home() {
       {/* Duas colunas */}
       <section className="mx-auto grid max-w-6xl gap-6 px-5 py-20 md:grid-cols-2">
         {[
-          { id: "validadores", t: "Para Validadores", items: ["Avalie produtos das categorias que você curte", "Liberdade de horário, sem vínculo trabalhista", "Saque via Pix a partir de R$ 100", "Níveis Bronze, Prata, Ouro e Diamante"], cta: "Quero validar e ganhar", perfil: "validador" as const, v: "success" as const },
+          { id: "validadores", t: "Para Validadores", items: ["Avalie produtos das categorias que você curte", "Liberdade de horário, sem vínculo trabalhista",  "Regra de saque planejada: Pix a partir de R$ 100 (indisponível nesta etapa)", "Níveis Bronze, Prata, Ouro e Diamante"], cta: "Quero validar e ganhar", perfil: "validador" as const, v: "success" as const },
           { id: "anunciantes", t: "Para Anunciantes", items: ["Opinião honesta antes de investir em divulgação", "Nota, % de aprovação e diagnóstico", "Avaliações de pessoas que curtem sua categoria", "Resultado privado, que ninguém altera"], cta: "Quero validar meu produto", perfil: "anunciante" as const, v: "hero" as const },
         ].map((c) => (
           <div key={c.id} id={c.id} className="scroll-mt-24 rounded-3xl border bg-card p-8 shadow-card">
@@ -197,7 +197,7 @@ function Home() {
       {/* Confiança */}
       <section className="border-y bg-primary-soft">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-5 py-10 md:grid-cols-4">
-          {[[UserCheck, "Avaliações independentes"], [Lock, "O anunciante não apaga a nota"], [BadgeCheck, "Contas verificadas"], [ShieldCheck, "Somente maiores de 18"]].map(([Icon, t]) => {
+          {[[UserCheck, "Avaliações independentes"], [Lock, "O anunciante não apaga a nota"], [BadgeCheck, "Cadastro sujeito a verificações"], [ShieldCheck, "Somente maiores de 18"]].map(([Icon, t]) => {
             const I = Icon as typeof Lock;
             return <div key={t as string} className="flex items-center gap-3 text-sm font-semibold text-secondary-foreground"><I className="size-5 shrink-0 text-primary" />{t as string}</div>;
           })}
